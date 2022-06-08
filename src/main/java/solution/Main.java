@@ -2,6 +2,8 @@ package solution;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -62,8 +64,69 @@ public class Main {
             System.out.println();
         }
 
+        // Все прочитано из файлов
+
+        int[][] pricesMatrixForCurrentRace = new int[4][4];
+        int raceId;
+        switch (race) {
+            case ('H'):
+                raceId = 0;
+                break;
+            case ('S'):
+                raceId = 1;
+                break;
+            case ('W'):
+                raceId = 2;
+                break;
+            default:
+                try {
+                    throw new Exception();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+        }
+
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        map.put('S', 0);
+        map.put('W', 1);
+        map.put('T', 2);
+        map.put('P', 3);
+
+        System.out.println();
+        for(int i = 0 ; i < 4 ; i++ ) {
+            for (int j = 0; j < 4; j++) {
+                pricesMatrixForCurrentRace[i][j] = pricesMatrix[raceId][map.get(areaMatrix[i][j])];
+                System.out.print(pricesMatrixForCurrentRace[i][j] + " ");
+            }
+            System.out.println();
+        }
 
 
+        int rightPrice;
+        int downPrice;
+        int[][] way = new int[4][4];
+        for(int i = 0 ; i < 4 ; i++)
+            for(int j = 0 ; j < 4 ; j++)
+                way[i][j] = Integer.MAX_VALUE;
+        way[0][0] = 0;
+        for(int i = 0 ; i < 4 ; i++){
+            for(int j = 0 ; j < 4 ; j++){
+                rightPrice = Integer.MAX_VALUE;
+                downPrice = Integer.MAX_VALUE;
+                if(j < 3) {
+                    rightPrice = pricesMatrixForCurrentRace[i][j + 1];
+                    way[i][j+1] = Integer.min(way[i][j] + rightPrice , way[i][j+1]);
+                }
+
+                if(i < 3) {
+                    downPrice = pricesMatrixForCurrentRace[i + 1][j];
+                    way[i+1][j] = Integer.min(way[i][j] + downPrice , way[i+1][j]);
+                }
+            }
+        }
+
+        System.out.println("\n\n");
+        System.out.println(way[3][3]);
 
 //        int result;
 //        result = Solution.getResult();
