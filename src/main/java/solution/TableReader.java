@@ -14,18 +14,27 @@ public class TableReader {
 
     private void readFile() {
         try {
-            FileReader fr = new FileReader(this.tableFile);
-            //создаем BufferedReader с существующего FileReader для построчного считывания
-            BufferedReader reader = new BufferedReader(fr);
-            // считаем сначала первую строку
+            FileReader reader = null;
+            try {
+            reader = new FileReader(this.tableFile);
+            } catch (FileNotFoundException e) {
+                System.out.println("File \"" + this.tableFile.getName() + "\"  not found or does not exist!");
+                throw new RuntimeException(e);
+            }
+
+            BufferedReader bufferedReader = new BufferedReader(reader);
             String[] line;
             for( int i = 0 ; i < 3 ; i++) {
-                line = reader.readLine().split(" ");
+                line = bufferedReader.readLine().split(" ");
+                if(line.length != 4){
+                    System.out.println("String " + i + " does not contain 4 numbers");
+                    throw new RuntimeException("String " + i + " does not contain 4 numbers");
+                }
                 for( int j = 0 ; j < 4 ; j++)
                     this.pricesMatrix[i][j] = Integer.parseInt(line[j]);
             }
+            bufferedReader.close();
             reader.close();
-            fr.close();
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();

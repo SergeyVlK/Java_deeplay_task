@@ -1,32 +1,71 @@
 package solution;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+
+
 
 public class AreaRaceReader {
     private char[][] areaMatrix;
-    private char race;
+    private String race;
     private File areaFile;
 
     public AreaRaceReader(String areaFilePath) {
         this.areaFile = new File(Main.class.getClassLoader().getResource(areaFilePath).getFile());
         this.areaMatrix = new char[4][4];
-        this.race = '0';
+        this.race = "";
         this.readFile();
     }
 
     private void readFile() {
-        try(FileReader reader = new FileReader(this.areaFile))
-        {
-            for( int i = 0 ; i < 4 ; i++)
-                for( int j = 0 ; j < 4 ; j++ )
-                    this.areaMatrix[i][j] = (char)reader.read();
-            reader.read();
-            this.race = (char)reader.read();
+        FileReader reader = null;
+        try {
+            reader = new FileReader(this.areaFile);
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"" + this.areaFile.getName() + "\"  not found or does not exist!");
+            throw new RuntimeException(e);
         }
-        catch(IOException ex){
-            System.out.println(ex.getMessage());
+        BufferedReader bufferedReader = new BufferedReader(reader);
+
+        String firstString;
+        try {
+            firstString = bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if( 16 != firstString.length() ) {
+            System.out.println("First string of file\"" + this.areaFile.getName() +"\" does not contain 16 characters");
+            throw new RuntimeException("First string of file\"" + this.areaFile.getName() +"\" does not contain 16 characters");
+        }
+        if (!firstString.matches("[STWP]*")) {
+            System.out.println("First line contains invalid characters");
+            throw new RuntimeException("First line contains invalid characters");
+        }
+
+        for( int i = 0 ; i < 4 ; i++)
+            for( int j = 0 ; j < 4 ; j++ )
+                this.areaMatrix[i][j] = firstString.charAt(4*i +j);
+
+        String secondString;
+        try {
+            secondString = bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if(secondString.length() == 0){
+            System.out.println("Second line is empty");
+            throw new RuntimeException("Second line is empty");
+        }
+        if (!Main.raceId.containsKey(secondString)) {
+            System.out.println("Second line contains invalid race");
+            throw new RuntimeException("Second line contains invalid race");
+        }
+        this.race = secondString;
+
+        try {
+            bufferedReader.close();
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -44,7 +83,7 @@ public class AreaRaceReader {
     public char[][] getMatrix() {
         return this.areaMatrix;
     }
-    public char getRace() {
+    public String getRace() {
         return this.race;
     }
 }
