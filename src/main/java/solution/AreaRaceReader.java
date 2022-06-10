@@ -1,23 +1,23 @@
 package solution;
 
 import java.io.*;
-
+import java.util.Objects;
 
 
 public class AreaRaceReader {
-    private char[][] areaMatrix;
+    private final char[][] areaMatrix;
     private String race;
-    private File areaFile;
+    private final File areaFile;
 
     public AreaRaceReader(String areaFilePath) {
-        this.areaFile = new File(Main.class.getClassLoader().getResource(areaFilePath).getFile());
+        this.areaFile = new File(Objects.requireNonNull(Main.class.getClassLoader().getResource(areaFilePath)).getFile());
         this.areaMatrix = new char[4][4];
         this.race = "";
         this.readFile();
     }
 
     private void readFile() {
-        FileReader reader = null;
+        FileReader reader;
         try {
             reader = new FileReader(this.areaFile);
         } catch (FileNotFoundException e) {

@@ -1,20 +1,21 @@
 package solution;
 
 import java.io.*;
+import java.util.Objects;
 
 public class TableReader {
-    private int[][] pricesMatrix;
-    private File tableFile;
+    private final int[][] pricesMatrix;
+    private final File tableFile;
 
     public TableReader(String tableFilePath){
-        this.tableFile = new File(Main.class.getClassLoader().getResource(tableFilePath).getFile());
+        this.tableFile = new File(Objects.requireNonNull(Main.class.getClassLoader().getResource(tableFilePath)).getFile());
         this.pricesMatrix = new int[4][4];
         this.readFile();
     }
 
     private void readFile() {
         try {
-            FileReader reader = null;
+            FileReader reader;
             try {
             reader = new FileReader(this.tableFile);
             } catch (FileNotFoundException e) {
@@ -35,11 +36,7 @@ public class TableReader {
             }
             bufferedReader.close();
             reader.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -49,9 +46,8 @@ public class TableReader {
     }
 
     public void printMatrix(){
-        for( int i = 0 ; i < this.pricesMatrix.length ; i++ ) {
-            for (int j = 0; j < this.pricesMatrix[i].length; j++)
-                System.out.print(this.pricesMatrix[i][j] + " ");
+        for (int[] matrix : this.pricesMatrix) {
+            for (int i : matrix) System.out.print(i + " ");
             System.out.println();
         }
     }

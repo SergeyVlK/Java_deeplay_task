@@ -1,17 +1,13 @@
 package solution;
 
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class AreaPricesCalculator {
-    private int[][] pricesMatrixForCurrentRace;
+    private final int[][] pricesMatrixForCurrentRace;
 
 
     public AreaPricesCalculator(String race, int[][] pricesMatrix, char[][] areaMatrix) {
         this.pricesMatrixForCurrentRace = new int[4][4];
-
-
-
         this.calculate(race, pricesMatrix, areaMatrix);
     }
 
